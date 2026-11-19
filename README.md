@@ -39,6 +39,24 @@ HbF_LSTM/
 | `codes/plot_number_of_visits_R2.ipynb` | Plots model performance by number of visits. |
 | `codes/plot_SHAP_impact.ipynb` | Aggregates and visualizes SHAP impact summaries. |
 
+### LSTM analyses excluding BMT
+
+The `LSTM_*_no_bmt.ipynb` notebooks exclude patients whose `BMT` value is `1` in `data/Apply_MI_Zheng_2023_01/othertreatment_summary.sas7bdat`. They identify these patients by `SCCRIP_ID` and remove their longitudinal records before modeling, using the same processed longitudinal and background pickle files as the original notebooks.
+
+| File | Purpose |
+| --- | --- |
+| `codes/LSTM_Cmodel_no_bmt.ipynb` | Trains/evaluates the C model after excluding BMT patients. |
+| `codes/LSTM_Tmodel_no_bmt.ipynb` | Trains/evaluates the T model after excluding BMT patients. |
+| `codes/LSTM_MixModel_no_bmt.ipynb` | Trains/evaluates the mixed model after excluding BMT patients. |
+| `codes/LSTM_Cmodel_shap_no_bmt.ipynb` | Computes SHAP impact summaries and R2 results for the C model after excluding BMT patients. |
+| `codes/LSTM_Tmodel_shap_no_bmt.ipynb` | Computes SHAP impact summaries and R2 results for the T model after excluding BMT patients. |
+| `codes/LSTM_MixModel_shap_no_bmt.ipynb` | Computes SHAP impact summaries and R2 results for the mixed model after excluding BMT patients. |
+
+
+These analyses write figures under `results/figures/cmodel_nobmt/`, `results/figures/tmodel_nobmt/`, and `results/figures/mix_nobmt/`. The SHAP notebooks write `shap_impact_list_noBMT*.pkl` and `r2_*_noBMT.pkl` outputs under `results/data/cmodel/`, `results/data/tmodel/`, and `results/data/mix/`.
+
+The C and T training notebooks currently save models as `results/models/C_best2.h5` and `results/models/T_best2.h5`; these filenames do not distinguish the BMT-excluded analyses. Model saving is commented out in the mixed-model notebooks.
+
 ## Expected external folders
 
 Several notebooks use relative paths that expect data and generated artifacts outside the `codes/` folder:
@@ -101,5 +119,6 @@ TensorFlow will use a GPU if one is available and configured; otherwise the shar
    - `LSTM_Tmodel.ipynb`
    - `LSTM_MixModel.ipynb`
 4. Run the SHAP notebooks to compute feature-importance summaries.
+   - For analyses excluding BMT patients, use `LSTM_Cmodel_no_bmt.ipynb`, `LSTM_Tmodel_no_bmt.ipynb`, and `LSTM_MixModel_no_bmt.ipynb` in step 3, followed by their corresponding `*_shap_no_bmt.ipynb` notebooks. Ensure `othertreatment_summary.sas7bdat` is available for the BMT exclusion.
 5. Run the plotting notebooks to produce R2, visit-count, SHAP-impact, and raw-HbF summary figures.
 6. Use the GEE notebook for statistical subgroup comparisons.
